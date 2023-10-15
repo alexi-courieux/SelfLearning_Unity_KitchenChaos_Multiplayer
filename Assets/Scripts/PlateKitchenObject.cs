@@ -29,4 +29,9 @@ public class PlateKitchenObject : KitchenObject
         OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs{ kitchenObjectSo = kitchenObjectSo});
         return true;
     }
+
+    public List<KitchenObjectSO> GetIngredients()
+    {
+        return _ingredients;
+    }
 }
