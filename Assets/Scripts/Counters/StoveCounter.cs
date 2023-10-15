@@ -54,6 +54,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                         GetKitchenObject().DestroySelf();
                         KitchenObject.SpawnKitchenObject(_fryingRecipeSo.output, this);
                         _burningRecipeSo = GetBurningRecipeFromInput(GetKitchenObject().KitchenObjectSo);
+                        _burningTimer = 0f;
                         _state = State.Fried;
                         OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
                         {
