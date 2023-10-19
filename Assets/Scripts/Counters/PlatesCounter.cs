@@ -17,10 +17,10 @@ public class PlatesCounter : BaseCounter
 
     private void Update()
     {
-        _spawnPlateTimer += Time.deltaTime;
-        if (_spawnPlateTimer > SpawnFrequency)
+        _spawnPlateTimer -= Time.deltaTime;
+        if (_spawnPlateTimer <= 0f)
         {
-            _spawnPlateTimer = 0f;
+            _spawnPlateTimer += SpawnFrequency;
             if (_platesSpawnedAmount < _plateSpawnerAmountMax)
             {
                 _platesSpawnedAmount++;

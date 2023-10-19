@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,6 +7,9 @@ using Random = UnityEngine.Random;
 public class DeliveryManager : MonoBehaviour
 {
     public static DeliveryManager Instance { get; private set; }
+
+    public event EventHandler OnRecipeSpawned;
+    public event EventHandler OnRecipeCompleted;
 
     [SerializeField] private RecipeListSo availableRecipeListSo;
     private List<RecipeSo> _waitingRecipeSoList;
@@ -38,6 +42,7 @@ public class DeliveryManager : MonoBehaviour
         var recipe = availableRecipes[Random.Range(0, availableRecipes.Count)];
         
         _waitingRecipeSoList.Add(recipe);
+        OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     public void DeliverRecipe(PlateKitchenObject plateKitchenObject)
@@ -73,14 +78,18 @@ public class DeliveryManager : MonoBehaviour
                 {
                     // The correct recipe has been delivered
                     _waitingRecipeSoList.Remove(waitingRecipe);
-                    Debug.Log("Correct recipe delivered - " + waitingRecipe.name);
+                    OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
                     return;
                 }
             }
         }
 
         // The wrong recipe has been delivered
-        Debug.Log("Wrong recipe delivered");
         return;
+    }
+    
+    public List<RecipeSo> GetWaitingRecipeSoList()
+    {
+        return _waitingRecipeSoList;
     }
 }
