@@ -10,6 +10,8 @@ public class DeliveryManager : MonoBehaviour
 
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
+    public event EventHandler OnRecipeSuccess;
+    public event EventHandler OnRecipeFailed;
 
     [SerializeField] private RecipeListSo availableRecipeListSo;
     private List<RecipeSo> _waitingRecipeSoList;
@@ -79,12 +81,14 @@ public class DeliveryManager : MonoBehaviour
                     // The correct recipe has been delivered
                     _waitingRecipeSoList.Remove(waitingRecipe);
                     OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
+                    OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
                     return;
                 }
             }
         }
 
         // The wrong recipe has been delivered
+        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
         return;
     }
     

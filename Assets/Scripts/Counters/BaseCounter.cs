@@ -4,6 +4,9 @@ using UnityEngine;
 public abstract class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
     [SerializeField] private Transform kitchenObjectHoldPoint;
+    
+    public static event EventHandler OnAnyObjectPlacedHere;
+    
     private KitchenObject _kitchenObject;
     public abstract void Interact(Player player);
 
@@ -20,6 +23,11 @@ public abstract class BaseCounter : MonoBehaviour, IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         _kitchenObject = kitchenObject;
+
+        if (kitchenObject != null) 
+        {
+            OnAnyObjectPlacedHere?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public KitchenObject GetKitchenObject()
