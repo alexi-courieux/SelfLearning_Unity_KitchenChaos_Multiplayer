@@ -749,6 +749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 486639170}
   - component: {fileID: 486639171}
+  - component: {fileID: 486639172}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -791,6 +792,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   kitchenObjectHoldPoint: {fileID: 1087552698}
+--- !u!114 &486639172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486639169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef32c2bdc71afa4b8f4bcfa7765e83d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &493127780 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6203354241526241478, guid: 018d7ce6ed3a59f4f99eb976ca0d5bc5,
@@ -2339,7 +2352,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7a05dfef8ff133848b3b25408c74021c, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -2839,32 +2852,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1233933028}
     m_Modifications:
-    - target: {fileID: 2733149999856261393, guid: 0d955bfd19b1f944b9abe57d30707781,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5056948277217060064, guid: 0d955bfd19b1f944b9abe57d30707781,
         type: 3}
       propertyPath: m_Name
       value: StoveCounter
       objectReference: {fileID: 0}
-    - target: {fileID: 5065219232409806162, guid: 0d955bfd19b1f944b9abe57d30707781,
+    - target: {fileID: 5988027719136827455, guid: 0d955bfd19b1f944b9abe57d30707781,
         type: 3}
-      propertyPath: fryingRecipeSoArray.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5065219232409806162, guid: 0d955bfd19b1f944b9abe57d30707781,
-        type: 3}
-      propertyPath: fryingRecipeSoArray.Array.data[0]
+      propertyPath: audioClipRefs
       value: 
-      objectReference: {fileID: 11400000, guid: a27f41072b6ae8842998f5821f3d742c,
-        type: 2}
-    - target: {fileID: 5065219232409806162, guid: 0d955bfd19b1f944b9abe57d30707781,
-        type: 3}
-      propertyPath: fryingRecipeSoArray.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: 7c66a9497cba73e41b9381559afa18c4,
+      objectReference: {fileID: 11400000, guid: 51938627d2a95a94c8e275d2c17616f4,
         type: 2}
     - target: {fileID: 6411873877364245157, guid: 0d955bfd19b1f944b9abe57d30707781,
         type: 3}
