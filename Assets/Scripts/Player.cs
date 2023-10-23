@@ -121,6 +121,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleInteractionInput(object sender, EventArgs e)
     {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         if (SelectedCounter != null)
         {
             SelectedCounter.Interact(this);
@@ -129,6 +130,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleInteraction()
     {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         var inputVector = gameInput.GetMovementVectorNormalized();
         var moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
         if (moveDirection != Vector3.zero)
