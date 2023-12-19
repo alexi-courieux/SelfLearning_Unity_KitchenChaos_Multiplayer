@@ -30,7 +30,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     public bool IsWalking() => _isWalking;
 
-    [SerializeField] private float moveSpeed = 7f;
+    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask;
     [SerializeField] private Transform kitchenObjectHoldPoint;
