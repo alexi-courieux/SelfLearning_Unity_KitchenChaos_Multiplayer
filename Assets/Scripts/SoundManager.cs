@@ -1,19 +1,22 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SoundManager : MonoBehaviour
 {
+    private const string PlayerPrefsSoundEffectVolume = "SoundEffectVolume";
     public static SoundManager Instance { get; private set; }
 
     [SerializeField] private AudioClipRefsSO audioClipRefs;
 
+    public float Volume { get; private set; }
+
     private void Awake()
     {
         Instance = this;
+        
+        Volume = PlayerPrefs.GetFloat(PlayerPrefsSoundEffectVolume, 1f);
     }
 
     private void Start()
@@ -27,7 +30,7 @@ public class SoundManager : MonoBehaviour
     }
 
     private void TrashCounter_OnAnyObjectTrashed(object sender, EventArgs e)
-    { 
+    {
         var counter = (TrashCounter) sender;
         PlaySound(audioClipRefs.trash, counter.transform.position);
     }
@@ -62,18 +65,30 @@ public class SoundManager : MonoBehaviour
         PlaySound(audioClipRefs.deliverySuccess, position);
     }
 
-    private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f)
+    private void PlaySound(AudioClip audioClip, Vector3 position, float volumeMultiplier = 1f)
     {
-        AudioSource.PlayClipAtPoint(audioClip, position, volume);
+        AudioSource.PlayClipAtPoint(audioClip, position, Volume * volumeMultiplier);
     }
 
-    public void PlaySound(IReadOnlyList<AudioClip> audioClipArray, Vector3 position, float volume = 1f)
+    public void PlaySound(IReadOnlyList<AudioClip> audioClipArray, Vector3 position, float volumeMultiplier = 1f)
     {
-        PlaySound(audioClipArray[Random.Range(0, audioClipArray.Count)], position, volume);
+        PlaySound(audioClipArray[Random.Range(0, audioClipArray.Count)], position, Volume * volumeMultiplier);
     }
-    
-    public void PlayFootstepsSound(Vector3 position, float volume = 1f)
+
+    public void PlayFootstepsSound(Vector3 position, float volumeMultiplier = 1f)
     {
-        PlaySound(audioClipRefs.footsteps, position, volume);
+        PlaySound(audioClipRefs.footsteps, position, volumeMultiplier);
+    }
+
+    public void ChangeVolume()
+    {
+        Volume += .1f;
+        if (Volume > 1.1f)
+        {
+            Volume = 0f;
+        }
+        
+        PlayerPrefs.SetFloat(PlayerPrefsSoundEffectVolume, Volume);
+        PlayerPrefs.Save();
     }
 }
