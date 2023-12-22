@@ -7,7 +7,7 @@ public class TrashCounter : BaseCounter
 {
 
     public static event EventHandler OnAnyObjectTrashed;
-    public static void ResetStaticData()
+    public new static void ResetStaticData()
     {
         OnAnyObjectTrashed = null;
     }
