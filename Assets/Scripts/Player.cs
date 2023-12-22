@@ -90,15 +90,16 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             // Cannot move towards moveDirection
 
             //Attempt only X movement
+            const float moveDirectionDeadZone = 0.5f;
             var moveDirectionX = new Vector3(moveDirection.x, 0, 0).normalized;
-            canMove = moveDirection.x !=0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
+            canMove = moveDirection.x is < -moveDirectionDeadZone or > moveDirectionDeadZone && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
                 playerRadius, moveDirectionX, moveDistance);
             if (canMove) moveDirection = moveDirectionX;
             else
             {
                 //Attempt only Z movement
                 var moveDirectionZ = new Vector3(0, 0, moveDirection.z).normalized;
-                canMove = moveDirection.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
+                canMove = moveDirection.z is < -moveDirectionDeadZone or > moveDirectionDeadZone && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
                     playerRadius, moveDirectionZ, moveDistance);
                 if (canMove) moveDirection = moveDirectionZ;
                 else

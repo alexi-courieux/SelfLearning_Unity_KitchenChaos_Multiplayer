@@ -23,7 +23,6 @@ public class MusicManager : MonoBehaviour
         Volume += .1f;
         if (Volume >= 1.1f)
         {
-            Debug.Log(Volume);
             Volume = 0f;
         }
 

@@ -18,7 +18,11 @@ public class GameInput : MonoBehaviour
         MoveRight,
         Interact,
         InteractAlternate,
-        Pause
+        Pause,
+        GamepadMove,
+        GamepadInteract,
+        GamepadInteractAlternate,
+        GamepadPause
     }
     
     private PlayerInputActions _playerInputActions;
@@ -83,6 +87,10 @@ public class GameInput : MonoBehaviour
             Binding.Interact => _playerInputActions.Player.Interact.bindings[0].ToDisplayString(),
             Binding.InteractAlternate => _playerInputActions.Player.InteractAlternate.bindings[0].ToDisplayString(),
             Binding.Pause => _playerInputActions.Player.Pause.bindings[0].ToDisplayString(),
+            Binding.GamepadMove => _playerInputActions.Player.Move.bindings[5].ToDisplayString(),
+            Binding.GamepadInteract => _playerInputActions.Player.Interact.bindings[1].ToDisplayString(),
+            Binding.GamepadInteractAlternate => _playerInputActions.Player.InteractAlternate.bindings[1].ToDisplayString(),
+            Binding.GamepadPause => _playerInputActions.Player.Pause.bindings[1].ToDisplayString(),
             _ => throw new ArgumentOutOfRangeException(nameof(binding), binding, "Binding not implemented")
         };
     }
@@ -92,7 +100,7 @@ public class GameInput : MonoBehaviour
         _playerInputActions.Player.Disable();
 
         InputAction inputAction;
-        int bindingIndex = 0;
+        int bindingIndex;
         switch (binding)
         {
             case Binding.MoveUp:
@@ -113,12 +121,31 @@ public class GameInput : MonoBehaviour
                 break;
             case Binding.Interact:
                 inputAction = _playerInputActions.Player.Interact;
+                bindingIndex = 0;
                 break;
             case Binding.InteractAlternate:
                 inputAction = _playerInputActions.Player.InteractAlternate;
+                bindingIndex = 0;
                 break;
             case Binding.Pause:
                 inputAction = _playerInputActions.Player.Pause;
+                bindingIndex = 0;
+                break;
+            case Binding.GamepadMove:
+                inputAction = _playerInputActions.Player.Move;
+                bindingIndex = 1;
+                break;
+            case Binding.GamepadInteract:
+                inputAction = _playerInputActions.Player.Interact;
+                bindingIndex = 1;
+                break;
+            case Binding.GamepadInteractAlternate:
+                inputAction = _playerInputActions.Player.InteractAlternate;
+                bindingIndex = 1;
+                break;
+            case Binding.GamepadPause:
+                inputAction = _playerInputActions.Player.Pause;
+                bindingIndex = 1;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(binding), binding, "Binding not implemented");
