@@ -16,7 +16,7 @@ public class DeliveryManager : MonoBehaviour
     [SerializeField] private RecipeListSo availableRecipeListSo;
     private List<RecipeSo> _waitingRecipeSoList;
 
-    private float spawnRecipeTimer;
+    private float spawnRecipeTimer = 0f;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipesMax = 4;
     private int successfulRecipesAmount;
@@ -29,12 +29,11 @@ public class DeliveryManager : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         spawnRecipeTimer -= Time.deltaTime;
-        if (spawnRecipeTimer <= 0f)
-        {
-            spawnRecipeTimer += spawnRecipeTimerMax;
-            SpawnRecipe();
-        }
+        if (!(spawnRecipeTimer <= 0f)) return;
+        spawnRecipeTimer += spawnRecipeTimerMax;
+        SpawnRecipe();
     }
 
     private void SpawnRecipe()

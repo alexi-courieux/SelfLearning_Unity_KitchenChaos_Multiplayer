@@ -9,6 +9,7 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnInteract; 
     public event EventHandler OnInteractAlternate;
     public event EventHandler OnPauseAction;
+    public event EventHandler OnKeyRebind;
 
     public enum Binding
     {
@@ -160,6 +161,8 @@ public class GameInput : MonoBehaviour
                 string bindings = _playerInputActions.SaveBindingOverridesAsJson();
                 PlayerPrefs.SetString(PlayerPrefsBindings, bindings);
                 PlayerPrefs.Save();
+                
+                OnKeyRebind?.Invoke(this, EventArgs.Empty);
             })
             .Start();
     }

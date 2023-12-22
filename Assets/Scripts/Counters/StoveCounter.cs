@@ -84,6 +84,10 @@ public class StoveCounter : BaseCounter, IHasProgress
 
                     break;
                 case State.Burned:
+                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs()
+                    {
+                        ProgressNormalized = 1f
+                    });
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -151,6 +155,11 @@ public class StoveCounter : BaseCounter, IHasProgress
                 });
             }
         }
+    }
+    
+    public bool IsFried()
+    {
+        return _state == State.Fried;
     }
 
     private KitchenObjectSO GetOutputFromInput(KitchenObjectSO input)

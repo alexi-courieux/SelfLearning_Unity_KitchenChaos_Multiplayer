@@ -53,7 +53,7 @@ public class OptionsUI : MonoBehaviour
         closeButton.onClick.AddListener(() =>
         {
             Hide();
-            _onClose();
+            _onClose?.Invoke();
         });
         
         moveUpButton.onClick.AddListener(() => { RebindKey(GameInput.Binding.MoveUp); });
@@ -103,6 +103,7 @@ public class OptionsUI : MonoBehaviour
     
     public void Show(Action onCloseAction)
     {
+        _onClose = onCloseAction;
         gameObject.SetActive(true);
         soundEffectsButton.Select();
     }

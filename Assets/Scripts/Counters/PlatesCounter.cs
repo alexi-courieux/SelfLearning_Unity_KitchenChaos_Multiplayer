@@ -17,6 +17,7 @@ public class PlatesCounter : BaseCounter
 
     private void Update()
     {
+        if (!GameManager.Instance.IsGamePlaying()) return;
         _spawnPlateTimer -= Time.deltaTime;
         if (_spawnPlateTimer <= 0f)
         {
