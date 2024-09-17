@@ -1,65 +1,60 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class TutorialUI : MonoBehaviour
-{
-    
-    [SerializeField] private TextMeshProUGUI moveUpText;
-    [SerializeField] private TextMeshProUGUI moveDownText;
-    [SerializeField] private TextMeshProUGUI moveLeftText;
-    [SerializeField] private TextMeshProUGUI moveRightText;
-    [SerializeField] private TextMeshProUGUI interactText;
-    [SerializeField] private TextMeshProUGUI interactAltText;
-    [SerializeField] private TextMeshProUGUI pauseText;
-    [SerializeField] private TextMeshProUGUI gamepadInteractText;
-    [SerializeField] private TextMeshProUGUI gamepadInteractAltText;
-    [SerializeField] private TextMeshProUGUI gamepadPauseText;
+public class TutorialUI : MonoBehaviour {
 
-    private void Start()
-    {
-        GameInput.Instance.OnKeyRebind += GameInput_OnKeyRebind;
-        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
-        UpdateVisuals();
+
+    [SerializeField] private TextMeshProUGUI keyMoveUpText;
+    [SerializeField] private TextMeshProUGUI keyMoveDownText;
+    [SerializeField] private TextMeshProUGUI keyMoveLeftText;
+    [SerializeField] private TextMeshProUGUI keyMoveRightText;
+    [SerializeField] private TextMeshProUGUI keyInteractText;
+    [SerializeField] private TextMeshProUGUI keyInteractAlternateText;
+    [SerializeField] private TextMeshProUGUI keyPauseText;
+    [SerializeField] private TextMeshProUGUI keyGamepadInteractText;
+    [SerializeField] private TextMeshProUGUI keyGamepadInteractAlternateText;
+    [SerializeField] private TextMeshProUGUI keyGamepadPauseText;
+
+
+    private void Start() {
+        GameInput.Instance.OnBindingRebind += GameInput_OnBindingRebind;
+        KitchenGameManager.Instance.OnStateChanged += KitchenGameManager_OnStateChanged;
+
+        UpdateVisual();
+
         Show();
     }
 
-    private void GameManager_OnStateChanged(object sender, EventArgs e)
-    {
-        if (GameManager.Instance.IsCountdownToStartActive())
-        { 
+    private void KitchenGameManager_OnStateChanged(object sender, System.EventArgs e) {
+        if (KitchenGameManager.Instance.IsCountdownToStartActive()) {
             Hide();
         }
     }
 
-    private void GameInput_OnKeyRebind(object sender, EventArgs e)
-    {
-        UpdateVisuals();
+    private void GameInput_OnBindingRebind(object sender, System.EventArgs e) {
+        UpdateVisual();
     }
 
-    private void UpdateVisuals()
-    {
-        moveUpText.text = GameInput.Instance.GetBindingText(GameInput.Binding.MoveUp);
-        moveDownText.text = GameInput.Instance.GetBindingText(GameInput.Binding.MoveDown);
-        moveLeftText.text = GameInput.Instance.GetBindingText(GameInput.Binding.MoveLeft);
-        moveRightText.text = GameInput.Instance.GetBindingText(GameInput.Binding.MoveRight);
-        interactText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Interact);
-        interactAltText.text = GameInput.Instance.GetBindingText(GameInput.Binding.InteractAlternate);
-        pauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Pause);
-        gamepadInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.GamepadInteract);
-        gamepadInteractAltText.text = GameInput.Instance.GetBindingText(GameInput.Binding.GamepadInteractAlternate);
-        gamepadPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.GamepadPause);
+    private void UpdateVisual() {
+        keyMoveUpText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Up);
+        keyMoveDownText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Down);
+        keyMoveLeftText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Left);
+        keyMoveRightText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Right);
+        keyInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Interact);
+        keyInteractAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.InteractAlternate);
+        keyPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Pause);
+        keyGamepadInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_Interact);
+        keyGamepadInteractAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_InteractAlternate);
+        keyGamepadPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_Pause);
     }
 
-    private void Show()
-    {
+    private void Show() {
         gameObject.SetActive(true);
     }
-    
-    private void Hide()
-    {
+
+    private void Hide() {
         gameObject.SetActive(false);
     }
 }

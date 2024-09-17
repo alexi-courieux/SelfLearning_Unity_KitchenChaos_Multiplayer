@@ -1,41 +1,46 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class GameOverUI : MonoBehaviour
-{
+public class GameOverUI : MonoBehaviour {
+
+
     [SerializeField] private TextMeshProUGUI recipesDeliveredText;
-    
-    private void Start()
-    {
-        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
+    [SerializeField] private Button playAgainButton;
+
+
+    private void Awake() {
+        playAgainButton.onClick.AddListener(() => {
+            Loader.Load(Loader.Scene.MainMenuScene);
+        });
+    }
+
+    private void Start() {
+        KitchenGameManager.Instance.OnStateChanged += KitchenGameManager_OnStateChanged;
+
         Hide();
     }
 
-    private void Update()
-    {
-        recipesDeliveredText.text = DeliveryManager.Instance.GetSuccessfulRecipesAmount().ToString();
-    }
-
-    private void GameManager_OnStateChanged(object sender, EventArgs e)
-    {
-        if (GameManager.Instance.IsGameOver())
-        {
+    private void KitchenGameManager_OnStateChanged(object sender, System.EventArgs e) {
+        if (KitchenGameManager.Instance.IsGameOver()) {
             Show();
-        }
-        else
-        {
+
+            recipesDeliveredText.text = DeliveryManager.Instance.GetSuccessfulRecipesAmount().ToString();
+        } else {
             Hide();
         }
     }
 
-    private void Hide()
-    {
+    private void Show() {
+        gameObject.SetActive(true);
+        playAgainButton.Select();
+    }
+
+    private void Hide() {
         gameObject.SetActive(false);
     }
 
-    private void Show()
-    {
-        gameObject.SetActive(true);
-    }
+
 }

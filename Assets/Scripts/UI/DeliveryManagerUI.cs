@@ -1,48 +1,44 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeliveryManagerUI : MonoBehaviour
-{
-    [SerializeField] private Transform recipeContainer;
+public class DeliveryManagerUI : MonoBehaviour {
+
+
+    [SerializeField] private Transform container;
     [SerializeField] private Transform recipeTemplate;
 
-    private void Awake()
-    {
+
+    private void Awake() {
         recipeTemplate.gameObject.SetActive(false);
     }
 
-    private void Start()
-    {
-        DeliveryManager.Instance.OnRecipeSpawned += DeliveryManagerOnRecipeSpawned;
-        DeliveryManager.Instance.OnRecipeCompleted += DeliveryManagerOnRecipeCompleted;
-    }
+    private void Start() {
+        DeliveryManager.Instance.OnRecipeSpawned += DeliveryManager_OnRecipeSpawned;
+        DeliveryManager.Instance.OnRecipeCompleted += DeliveryManager_OnRecipeCompleted;
 
-    private void DeliveryManagerOnRecipeSpawned(object sender, EventArgs e)
-    {
         UpdateVisual();
     }
 
-    private void DeliveryManagerOnRecipeCompleted(object sender, EventArgs e)
-    {
+    private void DeliveryManager_OnRecipeCompleted(object sender, System.EventArgs e) {
         UpdateVisual();
     }
 
-    private void UpdateVisual()
-    {
-        foreach (Transform recipe in recipeContainer)
-        {
-            if (recipe == recipeTemplate) continue;
-            Destroy(recipe.gameObject);
+    private void DeliveryManager_OnRecipeSpawned(object sender, System.EventArgs e) {
+        UpdateVisual();
+    }
+
+    private void UpdateVisual() {
+        foreach (Transform child in container) {
+            if (child == recipeTemplate) continue;
+            Destroy(child.gameObject);
         }
-            
-        foreach (var waitingRecipe in DeliveryManager.Instance.GetWaitingRecipeSoList())
-        {
-            var recipeTransform = Instantiate(recipeTemplate, recipeContainer);
+
+        foreach (RecipeSO recipeSO in DeliveryManager.Instance.GetWaitingRecipeSOList()) {
+            Transform recipeTransform = Instantiate(recipeTemplate, container);
             recipeTransform.gameObject.SetActive(true);
-            recipeTransform.GetComponent<DeliveryManagerSingleUI>().SetRecipeSo(waitingRecipe);
+            recipeTransform.GetComponent<DeliveryManagerSingleUI>().SetRecipeSO(recipeSO);
         }
-        
     }
+
 }

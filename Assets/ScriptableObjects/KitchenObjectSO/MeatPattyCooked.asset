@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40633644b37dc2143b5d20b062f9b8e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8dc21a10037aee741b16be775dd5891f, type: 3}
   m_Name: MeatPattyCooked
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7909375004059017460, guid: bc5b4598569d22c4a82265bc709e14e8, type: 3}
+  prefab: {fileID: 1778288183289012027, guid: d38419cd63858fe4d98029b62aaf3f42, type: 3}
   sprite: {fileID: 21300000, guid: f1f50c7ef90b19741b26f2040806cf56, type: 3}
-  objectName: Meat Patty (cooked)
+  objectName: Meat Patty Cooked

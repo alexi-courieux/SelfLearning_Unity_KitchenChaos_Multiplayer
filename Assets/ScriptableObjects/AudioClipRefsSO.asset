@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39bfddffb12cb3d428a774cda937fdbb, type: 3}
+  m_Script: {fileID: 11500000, guid: 603979d10c04e12489723d7f97422218, type: 3}
   m_Name: AudioClipRefsSO
   m_EditorClassIdentifier: 
   chop:
@@ -22,7 +22,7 @@ MonoBehaviour:
   deliverySuccess:
   - {fileID: 8300000, guid: 50205ffe58351d244bbcbd725dbfa802, type: 3}
   - {fileID: 8300000, guid: 4b22bfbdbacfa0445bc9bbfbb0141085, type: 3}
-  footsteps:
+  footstep:
   - {fileID: 8300000, guid: 078e15982fce2e147bf06c8a7682f28b, type: 3}
   - {fileID: 8300000, guid: b2d2893ac04fbdb44a226f4b6ea0d271, type: 3}
   - {fileID: 8300000, guid: cc97c340134faa948bcaf20fea6429c6, type: 3}
@@ -41,4 +41,3 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6024ba1d53d005f48a96b3a9f6bacedd, type: 3}
   warning:
   - {fileID: 8300000, guid: b90d8099bdbf09a40ab1163556d5b5f4, type: 3}
-  - {fileID: 8300000, guid: b59c98e0066c41f42b8100f5cb180f5b, type: 3}

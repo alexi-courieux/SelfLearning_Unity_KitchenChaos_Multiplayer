@@ -1,35 +1,34 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DeliveryManagerSingleUI : MonoBehaviour
-{
+public class DeliveryManagerSingleUI : MonoBehaviour {
+
+
     [SerializeField] private TextMeshProUGUI recipeNameText;
     [SerializeField] private Transform iconContainer;
     [SerializeField] private Transform iconTemplate;
 
-    private void Awake()
-    {
+
+    private void Awake() {
         iconTemplate.gameObject.SetActive(false);
     }
 
-    public void SetRecipeSo(RecipeSo recipeSo)
-    {
-        recipeNameText.text = recipeSo.recipeName;
-        foreach (Transform icon in iconContainer)
-        {
-            if (icon == iconTemplate) continue;
-            Destroy(icon.gameObject);
+    public void SetRecipeSO(RecipeSO recipeSO) {
+        recipeNameText.text = recipeSO.recipeName;
+
+        foreach (Transform child in iconContainer) {
+            if (child == iconTemplate) continue;
+            Destroy(child.gameObject);
         }
 
-        foreach (var ingredient in recipeSo.ingredients)
-        {
-            var iconTransform = Instantiate(iconTemplate, iconContainer);
+        foreach (KitchenObjectSO kitchenObjectSO in recipeSO.kitchenObjectSOList) {
+            Transform iconTransform = Instantiate(iconTemplate, iconContainer);
             iconTransform.gameObject.SetActive(true);
-            iconTransform.GetComponent<Image>().sprite = ingredient.sprite;
+            iconTransform.GetComponent<Image>().sprite = kitchenObjectSO.sprite;
         }
     }
+
 }

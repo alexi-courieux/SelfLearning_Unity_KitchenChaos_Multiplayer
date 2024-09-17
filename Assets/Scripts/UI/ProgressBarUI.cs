@@ -1,49 +1,49 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProgressBarUI : MonoBehaviour
-{
-    [SerializeField] private Image barImage;
-    [SerializeField] private GameObject hasProgressGo;
-    
-    private IHasProgress _hasProgress;
+public class ProgressBarUI : MonoBehaviour {
 
-    private void Start()
-    {
-        _hasProgress = hasProgressGo.GetComponent<IHasProgress>();
-        if (_hasProgress == null)
-        {
-            Debug.LogError("Game Object : " + hasProgressGo.name + " does not have a component that implements IHasProgress!");
-            throw new ArgumentOutOfRangeException("Game Object : " + hasProgressGo.name + " does not have a component that implements IHasProgress!");
+
+    [SerializeField] private GameObject hasProgressGameObject;
+    [SerializeField] private Image barImage;
+
+
+    private IHasProgress hasProgress;
+
+
+    private void Start() {
+        hasProgress = hasProgressGameObject.GetComponent<IHasProgress>();
+        if (hasProgress == null) {
+            Debug.LogError("Game Object " + hasProgressGameObject + " does not have a component that implements IHasProgress!");
         }
-        _hasProgress.OnProgressChanged += HasProgressOnProgressChanged;
+
+        hasProgress.OnProgressChanged += HasProgress_OnProgressChanged;
+
+        barImage.fillAmount = 0f;
+
         Hide();
     }
 
-    private void HasProgressOnProgressChanged(object sender, IHasProgress.OnProgressChangedEventArgs e)
-    {
-        barImage.fillAmount = e.ProgressNormalized;
+    private void HasProgress_OnProgressChanged(object sender, IHasProgress.OnProgressChangedEventArgs e) {
+        barImage.fillAmount = e.progressNormalized;
 
-        if (e.ProgressNormalized is 0f or 1f)
-        {
+        if (e.progressNormalized == 0f || e.progressNormalized == 1f) {
             Hide();
-        }
-        else
-        {
+        } else {
             Show();
         }
     }
-    
-    private void Show()
-    {
+
+    private void Show() {
         gameObject.SetActive(true);
     }
-    
-    private void Hide()
-    {
+
+    private void Hide() {
         gameObject.SetActive(false);
     }
+
+
+
 }

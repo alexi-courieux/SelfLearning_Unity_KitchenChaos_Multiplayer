@@ -1,42 +1,36 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectedCounterVisual : MonoBehaviour
-{
-    [SerializeField] private BaseCounter counter;
-    [SerializeField] private GameObject[] selectedCounterVisual;
-    private void Start()
-    {
-        Player.Instance.OnSelectedCounterChanged += HandleSelectedCounterChanged;
+public class SelectedCounterVisual : MonoBehaviour {
+
+
+    [SerializeField] private BaseCounter baseCounter;
+    [SerializeField] private GameObject[] visualGameObjectArray;
+
+
+    private void Start() {
+        Player.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
     }
 
-    private void HandleSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e)
-    {
-        if (e.SelectedCounter == counter)
-        {
+    private void Player_OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e) {
+        if (e.selectedCounter == baseCounter) {
             Show();
-        }
-        else
-        {
+        } else {
             Hide();
         }
     }
 
-    private void Show()
-    {
-        foreach (var visual in selectedCounterVisual)
-        {
-            visual.SetActive(true);
+    private void Show() {
+        foreach (GameObject visualGameObject in visualGameObjectArray) {
+            visualGameObject.SetActive(true);
         }
     }
 
-    private void Hide()
-    {
-        foreach (var visual in selectedCounterVisual)
-        {
-            visual.SetActive(false);
+    private void Hide() {
+        foreach (GameObject visualGameObject in visualGameObjectArray) {
+            visualGameObject.SetActive(false);
         }
     }
+
 }

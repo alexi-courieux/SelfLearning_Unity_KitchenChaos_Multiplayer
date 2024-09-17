@@ -1,191 +1,172 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IKitchenObjectParent
-{
-    private static Player _instance;
+public class Player : MonoBehaviour, IKitchenObjectParent {
 
-    public static Player Instance
-    {
-        get => _instance;
-        private set
-        {
-            if (_instance != null)
-            {
-                Debug.LogError("There is more than one Player instance in the scene!");
-                return;
-            }
 
-            _instance = value;
-        }
-    }
+    public static Player Instance { get; private set; }
+
+
 
     public event EventHandler OnPickedSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
-
-    public class OnSelectedCounterChangedEventArgs : EventArgs
-    {
-        public BaseCounter SelectedCounter;
+    public class OnSelectedCounterChangedEventArgs : EventArgs {
+        public BaseCounter selectedCounter;
     }
 
-    public bool IsWalking() => _isWalking;
 
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask;
     [SerializeField] private Transform kitchenObjectHoldPoint;
 
-    private KitchenObject _kitchenObject;
-    private bool _isWalking = false;
-    private Vector3 _lastInteractDirection;
 
-    private BaseCounter _selectedCounter;
+    private bool isWalking;
+    private Vector3 lastInteractDir;
+    private BaseCounter selectedCounter;
+    private KitchenObject kitchenObject;
 
-    private BaseCounter SelectedCounter
-    {
-        get => _selectedCounter;
-        set
-        {
-            _selectedCounter = value;
-            OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
-            {
-                SelectedCounter = _selectedCounter
-            });
+
+    private void Awake() {
+        if (Instance != null) {
+            Debug.LogError("There is more than one Player instance");
         }
-    }
-
-    private void Awake()
-    {
         Instance = this;
     }
 
-    private void Start()
-    {
-        gameInput.OnInteract += HandleInteractionInput;
-        gameInput.OnInteractAlternate += HandleInteractionAlternateInput;
+    private void Start() {
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
     }
 
-    private void Update()
-    {
+    private void GameInput_OnInteractAlternateAction(object sender, EventArgs e) {
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+
+        if (selectedCounter != null) {
+            selectedCounter.InteractAlternate(this);
+        }
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e) {
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+
+        if (selectedCounter != null) {
+            selectedCounter.Interact(this);
+        }
+    }
+
+    private void Update() {
         HandleMovement();
-        HandleInteraction();
+        HandleInteractions();
     }
 
-    private void HandleMovement()
-    {
-        var inputVector = gameInput.GetMovementVectorNormalized();
+    public bool IsWalking() {
+        return isWalking;
+    }
 
-        var moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
-        var moveDistance = moveSpeed * Time.deltaTime;
+    private void HandleInteractions() {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
-        const float playerRadius = 1.3f / 2f;
-        const float playerHeight = 1.8f;
-        var canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
-            playerRadius, moveDirection, moveDistance);
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
-        _isWalking = false;
+        if (moveDir != Vector3.zero) {
+            lastInteractDir = moveDir;
+        }
 
-        if (!canMove)
-        {
-            // Cannot move towards moveDirection
+        float interactDistance = 2f;
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, countersLayerMask)) {
+            if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter)) {
+                // Has ClearCounter
+                if (baseCounter != selectedCounter) {
+                    SetSelectedCounter(baseCounter);
+                }
+            } else {
+                SetSelectedCounter(null);
 
-            //Attempt only X movement
-            const float moveDirectionDeadZone = 0.5f;
-            var moveDirectionX = new Vector3(moveDirection.x, 0, 0).normalized;
-            canMove = moveDirection.x is < -moveDirectionDeadZone or > moveDirectionDeadZone && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
-                playerRadius, moveDirectionX, moveDistance);
-            if (canMove) moveDirection = moveDirectionX;
-            else
-            {
-                //Attempt only Z movement
-                var moveDirectionZ = new Vector3(0, 0, moveDirection.z).normalized;
-                canMove = moveDirection.z is < -moveDirectionDeadZone or > moveDirectionDeadZone && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
-                    playerRadius, moveDirectionZ, moveDistance);
-                if (canMove) moveDirection = moveDirectionZ;
-                else
-                {
-                    // Cannot move towards moveDirectionX or moveDirectionZ
+            }
+        } else {
+            SetSelectedCounter(null);
+        }
+    }
+
+    private void HandleMovement() {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+
+        float moveDistance = moveSpeed * Time.deltaTime;
+        float playerRadius = .7f;
+        float playerHeight = 2f;
+        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
+
+        if (!canMove) {
+            // Cannot move towards moveDir
+
+            // Attempt only X movement
+            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
+            canMove = (moveDir.x < -.5f || moveDir.x > +.5f) && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+
+            if (canMove) {
+                // Can move only on the X
+                moveDir = moveDirX;
+            } else {
+                // Cannot move only on the X
+
+                // Attempt only Z movement
+                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
+                canMove = (moveDir.z < -.5f || moveDir.z > +.5f) && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+
+                if (canMove) {
+                    // Can move only on the Z
+                    moveDir = moveDirZ;
+                } else {
+                    // Cannot move in any direction
                 }
             }
         }
 
-        if (canMove)
-        {
-            transform.position += moveDirection * Time.deltaTime * moveSpeed;
+        if (canMove) {
+            transform.position += moveDir * moveDistance;
         }
 
-        _isWalking = moveDirection != Vector3.zero;
+        isWalking = moveDir != Vector3.zero;
 
-        const float rotationSpeed = 10f;
-        transform.forward = Vector3.Slerp(transform.forward, moveDirection, rotationSpeed * Time.deltaTime);
+        float rotateSpeed = 10f;
+        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
     }
 
-    private void HandleInteractionInput(object sender, EventArgs e)
-    {
-        if (!GameManager.Instance.IsGamePlaying()) return;
-        if (SelectedCounter != null)
-        {
-            SelectedCounter.Interact(this);
-        }
+    private void SetSelectedCounter(BaseCounter selectedCounter) {
+        this.selectedCounter = selectedCounter;
+
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs {
+            selectedCounter = selectedCounter
+        });
     }
 
-    private void HandleInteraction()
-    {
-        if (!GameManager.Instance.IsGamePlaying()) return;
-        var inputVector = gameInput.GetMovementVectorNormalized();
-        var moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
-        if (moveDirection != Vector3.zero)
-        {
-            _lastInteractDirection = moveDirection;
-        }
-
-        const float interactDistance = 2f;
-        if (Physics.Raycast(transform.position, _lastInteractDirection, out var hitInfo, interactDistance,
-                countersLayerMask))
-        {
-            SelectedCounter = hitInfo.transform.TryGetComponent(out BaseCounter counter) ? counter : null;
-        }
-        else
-        {
-            SelectedCounter = null;
-        }
-    }
-    
-    private void HandleInteractionAlternateInput(object sender, EventArgs e)
-    {
-        if (SelectedCounter != null)
-        {
-            SelectedCounter.InteractAlternate(this);
-        }
-    }
-
-    public Transform GetKitchenObjectFollowTransform()
-    {
+    public Transform GetKitchenObjectFollowTransform() {
         return kitchenObjectHoldPoint;
     }
 
-    public void SetKitchenObject(KitchenObject kitchenObject)
-    {
-        _kitchenObject = kitchenObject;
-        
-        if(kitchenObject != null)
-        {
+    public void SetKitchenObject(KitchenObject kitchenObject) {
+        this.kitchenObject = kitchenObject;
+
+        if (kitchenObject != null) {
             OnPickedSomething?.Invoke(this, EventArgs.Empty);
         }
     }
 
-    public KitchenObject GetKitchenObject()
-    {
-        return _kitchenObject;
+    public KitchenObject GetKitchenObject() {
+        return kitchenObject;
     }
 
-    public void ClearKitchenObject()
-    {
-        _kitchenObject = null;
+    public void ClearKitchenObject() {
+        kitchenObject = null;
     }
 
-    public bool HasKitchenObject()
-    {
-        return _kitchenObject != null;
+    public bool HasKitchenObject() {
+        return kitchenObject != null;
     }
+
 }

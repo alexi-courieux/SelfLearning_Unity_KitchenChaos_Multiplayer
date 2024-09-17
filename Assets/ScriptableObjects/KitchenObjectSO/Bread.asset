@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40633644b37dc2143b5d20b062f9b8e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8dc21a10037aee741b16be775dd5891f, type: 3}
   m_Name: Bread
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7909375004059017460, guid: 7052462d739fb5648ba3d42a64df3a9f, type: 3}
+  prefab: {fileID: 1778288183289012027, guid: 1fb944fcbd0daaa4fac9417df22e15f8, type: 3}
   sprite: {fileID: 21300000, guid: 77b28124b8bda494381c80bd5aa42c22, type: 3}
   objectName: Bread

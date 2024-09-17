@@ -1,24 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class Loader
-{
-    public enum Scene
-    {
-        GameScene,
-        MainMenuScene,
-        LoadingScene,
-    }
-    
-    private static Scene _targetScene;
+public static class Loader {
 
-    public static void Load(Scene targetScene)
-    {
-        Loader._targetScene = targetScene;
+
+    public enum Scene {
+        MainMenuScene,
+        GameScene,
+        LoadingScene
+    }
+
+
+    private static Scene targetScene;
+
+
+
+    public static void Load(Scene targetScene) {
+        Loader.targetScene = targetScene;
+
         SceneManager.LoadScene(Scene.LoadingScene.ToString());
     }
-    
-    public static void LoaderCallback()
-    {
-        SceneManager.LoadScene(_targetScene.ToString());
+
+    public static void LoaderCallback() {
+        SceneManager.LoadScene(targetScene.ToString());
     }
+
 }

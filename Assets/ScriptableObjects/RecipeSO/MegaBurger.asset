@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f549dad469804661a1de0b0ca2836254, type: 3}
-  m_Name: MegaBurger
+  m_Script: {fileID: 11500000, guid: d0bc8e78076f7bb47894253fa280c634, type: 3}
+  m_Name: MEGAburger
   m_EditorClassIdentifier: 
-  ingredients:
-  - {fileID: 11400000, guid: 042f2ab49027cc24697d00b96367bec5, type: 2}
-  - {fileID: 11400000, guid: f6f7197c53faec14cbd8f9fbc62f2a83, type: 2}
-  - {fileID: 11400000, guid: 2c550b315bf935549a184ab049edc302, type: 2}
-  - {fileID: 11400000, guid: 1f2796c43391eab449793ad0f4f44843, type: 2}
-  - {fileID: 11400000, guid: e921128f97e42384f9aca18bbde0c56f, type: 2}
-  recipeName: Megaburger
+  kitchenObjectSOList:
+  - {fileID: 11400000, guid: c2481a7688752a94582d77f514752584, type: 2}
+  - {fileID: 11400000, guid: dc7206a372e873e44945cb9155f8c1ba, type: 2}
+  - {fileID: 11400000, guid: 8119098929e2ba14baf2c6ad491cf05e, type: 2}
+  - {fileID: 11400000, guid: caea38706d21dfa40a744b22f2f86434, type: 2}
+  - {fileID: 11400000, guid: 455ac2b492a3c3442bf926b427bb40d2, type: 2}
+  recipeName: MEGAburger

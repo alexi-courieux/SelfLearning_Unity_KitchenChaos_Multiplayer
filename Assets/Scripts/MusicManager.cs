@@ -1,33 +1,45 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-public class MusicManager : MonoBehaviour
-{
-    private const string PlayerPrefsMusicVolume = "MusicVolume";
+public class MusicManager : MonoBehaviour {
+
+
+    private const string PLAYER_PREFS_MUSIC_VOLUME = "MusicVolume";
+
+
     public static MusicManager Instance { get; private set; }
-    
-    public float Volume { get; private set; }
-    
-    private AudioSource _audioSource;
-    
-    private void Awake()
-    {
-        Instance = this;
-        _audioSource = GetComponent<AudioSource>();
-        
-        Volume = PlayerPrefs.GetFloat(PlayerPrefsMusicVolume, .3f);
-        _audioSource.volume = Volume;
-    }
-    
-    public void ChangeVolume()
-    {
-        Volume += .1f;
-        if (Volume >= 1.1f)
-        {
-            Volume = 0f;
-        }
 
-        _audioSource.volume = Volume;
-        PlayerPrefs.SetFloat(PlayerPrefsMusicVolume, Volume);
+
+
+    private AudioSource audioSource;
+    private float volume = .3f;
+
+
+    private void Awake() {
+        Instance = this;
+
+        audioSource = GetComponent<AudioSource>();
+
+        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_MUSIC_VOLUME, .3f);
+        audioSource.volume = volume;
+    }
+
+    public void ChangeVolume() {
+        volume += .1f;
+        if (volume > 1f) {
+            volume = 0f;
+        }
+        audioSource.volume = volume;
+
+        PlayerPrefs.SetFloat(PLAYER_PREFS_MUSIC_VOLUME, volume);
         PlayerPrefs.Save();
     }
+
+    public float GetVolume() {
+        return volume;
+    }
+
 }
