@@ -35,10 +35,8 @@ public class KitchenObject : NetworkBehaviour {
     {
         kitchenObjectParentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
         IKitchenObjectParent kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
-        
-        if (this.kitchenObjectParent != null) {
-            this.kitchenObjectParent.ClearKitchenObject();
-        }
+
+        this.kitchenObjectParent?.ClearKitchenObject();
 
         this.kitchenObjectParent = kitchenObjectParent;
 
