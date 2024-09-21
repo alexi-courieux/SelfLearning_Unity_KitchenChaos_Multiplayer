@@ -74,8 +74,8 @@ public class CuttingCounter : BaseCounter, IHasProgress {
     public override void InteractAlternate(Player player) {
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())) {
             // There is a KitchenObject here AND it can be cut
-            CutObjectServerRpc();
             TestCuttingProgressDoneServerRpc();
+            CutObjectServerRpc();
         }
     }
 
