@@ -160,10 +160,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent {
         return kitchenObjectHoldPoint;
     }
 
-    public void SetKitchenObject(KitchenObject kitchenObject) {
-        this.kitchenObject = kitchenObject;
+    public void SetKitchenObject(KitchenObject newKitchenObject) {
+        this.kitchenObject = newKitchenObject;
 
-        if (kitchenObject != null) {
+        if (newKitchenObject != null) {
             OnPickedSomething?.Invoke(this, EventArgs.Empty);
             OnAnyPickSomething?.Invoke(this, EventArgs.Empty);
         }

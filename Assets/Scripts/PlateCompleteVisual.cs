@@ -29,7 +29,7 @@ public class PlateCompleteVisual : MonoBehaviour {
 
     private void PlateKitchenObject_OnIngredientAdded(object sender, PlateKitchenObject.OnIngredientAddedEventArgs e) {
         foreach (KitchenObjectSO_GameObject kitchenObjectSOGameObject in kitchenObjectSOGameObjectList) {
-            if (kitchenObjectSOGameObject.kitchenObjectSO == e.kitchenObjectSO) {
+            if (kitchenObjectSOGameObject.kitchenObjectSO == e.KitchenObjectSo) {
                 kitchenObjectSOGameObject.gameObject.SetActive(true);
             }
         }

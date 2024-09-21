@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StoveCounterSound : MonoBehaviour {
@@ -23,7 +21,7 @@ public class StoveCounterSound : MonoBehaviour {
 
     private void StoveCounter_OnProgressChanged(object sender, IHasProgress.OnProgressChangedEventArgs e) {
         float burnShowProgressAmount = .5f;
-        playWarningSound = stoveCounter.IsFried() && e.progressNormalized >= burnShowProgressAmount;
+        playWarningSound = stoveCounter.IsFried() && e.ProgressNormalized >= burnShowProgressAmount;
     }
 
     private void StoveCounter_OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e) {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -19,7 +18,7 @@ public class DeliveryManager : NetworkBehaviour {
     [SerializeField] private RecipeListSO recipeListSO;
 
 
-    private List<RecipeSO> waitingRecipeSOList;
+    private List<RecipeSO> waitingRecipeSoList;
     private float spawnRecipeTimer = 4f;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipesMax = 4;
@@ -30,7 +29,7 @@ public class DeliveryManager : NetworkBehaviour {
         Instance = this;
 
 
-        waitingRecipeSOList = new List<RecipeSO>();
+        waitingRecipeSoList = new List<RecipeSO>();
     }
 
     private void Update() {
@@ -42,7 +41,7 @@ public class DeliveryManager : NetworkBehaviour {
         if (spawnRecipeTimer <= 0f) {
             spawnRecipeTimer = spawnRecipeTimerMax;
 
-            if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < waitingRecipesMax) {
+            if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSoList.Count < waitingRecipesMax) {
                 int waitingRecipeSoIndex = UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count);
                 SpawnNewWaitingRecipeClientRpc(waitingRecipeSoIndex);
             }
@@ -52,23 +51,23 @@ public class DeliveryManager : NetworkBehaviour {
     [ClientRpc]
     private void SpawnNewWaitingRecipeClientRpc(int waitingRecipeSoIndex) {
         RecipeSO waitingRecipeSo = recipeListSO.recipeSOList[waitingRecipeSoIndex];
-        waitingRecipeSOList.Add(waitingRecipeSo);
+        waitingRecipeSoList.Add(waitingRecipeSo);
         OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     public void DeliverRecipe(PlateKitchenObject plateKitchenObject) {
-        for (int i = 0; i < waitingRecipeSOList.Count; i++) {
-            RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
+        for (int i = 0; i < waitingRecipeSoList.Count; i++) {
+            RecipeSO waitingRecipeSO = waitingRecipeSoList[i];
 
-            if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count) {
+            if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSoList().Count) {
                 // Has the same number of ingredients
                 bool plateContentsMatchesRecipe = true;
-                foreach (KitchenObjectSO recipeKitchenObjectSO in waitingRecipeSO.kitchenObjectSOList) {
+                foreach (KitchenObjectSO recipeKitchenObjectSo in waitingRecipeSO.kitchenObjectSOList) {
                     // Cycling through all ingredients in the Recipe
                     bool ingredientFound = false;
-                    foreach (KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList()) {
+                    foreach (KitchenObjectSO plateKitchenObjectSo in plateKitchenObject.GetKitchenObjectSoList()) {
                         // Cycling through all ingredients in the Plate
-                        if (plateKitchenObjectSO == recipeKitchenObjectSO) {
+                        if (plateKitchenObjectSo == recipeKitchenObjectSo) {
                             // Ingredient matches!
                             ingredientFound = true;
                             break;
@@ -103,7 +102,7 @@ public class DeliveryManager : NetworkBehaviour {
     private void DeliverCorrectRecipeClientRpc(int recipeIndex) {
         successfulRecipesAmount++;
 
-        waitingRecipeSOList.RemoveAt(recipeIndex);
+        waitingRecipeSoList.RemoveAt(recipeIndex);
 
         OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
         OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
@@ -119,8 +118,8 @@ public class DeliveryManager : NetworkBehaviour {
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
     }
 
-    public List<RecipeSO> GetWaitingRecipeSOList() {
-        return waitingRecipeSOList;
+    public List<RecipeSO> GetWaitingRecipeSoList() {
+        return waitingRecipeSoList;
     }
 
     public int GetSuccessfulRecipesAmount() {

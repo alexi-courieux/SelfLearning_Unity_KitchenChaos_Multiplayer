@@ -1,4 +1,3 @@
-using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,12 +15,12 @@ public class KitchenObject : NetworkBehaviour {
         followTransform = GetComponent<FollowTransform>();
     }
 
-    public KitchenObjectSO GetKitchenObjectSO() {
+    public KitchenObjectSO GetKitchenObjectSo() {
         return kitchenObjectSO;
     }
 
-    public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent) {
-        SetKitchenObjectParentServerRpc(kitchenObjectParent.GetNetworkObject());
+    public void SetKitchenObjectParent(IKitchenObjectParent newKitchenObjectParent) {
+        SetKitchenObjectParentServerRpc(newKitchenObjectParent.GetNetworkObject());
     }
     
     [ServerRpc(RequireOwnership = false)]
@@ -34,19 +33,19 @@ public class KitchenObject : NetworkBehaviour {
     private void SetKitchenObjectParentClientRpc(NetworkObjectReference kitchenObjectParentNetworkObjectReference)
     {
         kitchenObjectParentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject);
-        IKitchenObjectParent kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
+        IKitchenObjectParent newKitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
 
         this.kitchenObjectParent?.ClearKitchenObject();
 
-        this.kitchenObjectParent = kitchenObjectParent;
+        this.kitchenObjectParent = newKitchenObjectParent;
 
-        if (kitchenObjectParent.HasKitchenObject()) {
+        if (newKitchenObjectParent.HasKitchenObject()) {
             Debug.LogError("IKitchenObjectParent already has a KitchenObject!");
         }
 
-        kitchenObjectParent.SetKitchenObject(this);
+        newKitchenObjectParent.SetKitchenObject(this);
 
-        followTransform.SetTargetTransform(kitchenObjectParent.GetKitchenObjectFollowTransform());
+        followTransform.SetTargetTransform(newKitchenObjectParent.GetKitchenObjectFollowTransform());
     }
 
     public IKitchenObjectParent GetKitchenObjectParent() {
@@ -74,9 +73,9 @@ public class KitchenObject : NetworkBehaviour {
 
 
 
-    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
+    public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSo, IKitchenObjectParent kitchenObjectParent)
     {
-        KitchenGameMultiplayer.Instance.SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent);
+        KitchenGameMultiplayer.Instance.SpawnKitchenObject(kitchenObjectSo, kitchenObjectParent);
     }
     
     public static void DestroyKitchenObject(KitchenObject kitchenObject)

@@ -5,9 +5,9 @@ public class FollowTransform : MonoBehaviour
 {
     private Transform targetTransform;
     
-    public void SetTargetTransform(Transform targetTransform)
+    public void SetTargetTransform(Transform newTargetTransform)
     {
-        this.targetTransform = targetTransform;
+        this.targetTransform = newTargetTransform;
     }
 
     private void LateUpdate()

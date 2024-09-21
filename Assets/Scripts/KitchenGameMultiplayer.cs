@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,16 +12,16 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         Instance = this;
     }
     
-    public void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent) {
-        SpawnKitchenObjectServerRpc(GetKitchenObjectSOIndex(kitchenObjectSO), kitchenObjectParent.GetNetworkObject());
+    public void SpawnKitchenObject(KitchenObjectSO kitchenObjectSo, IKitchenObjectParent kitchenObjectParent) {
+        SpawnKitchenObjectServerRpc(GetKitchenObjectSOIndex(kitchenObjectSo), kitchenObjectParent.GetNetworkObject());
     }
     
     [ServerRpc(RequireOwnership = false)]
-    private void SpawnKitchenObjectServerRpc(int kitchenObjectSOIndex, NetworkObjectReference kitchenObjectParentNetworkObjectReference)
+    private void SpawnKitchenObjectServerRpc(int kitchenObjectSoIndex, NetworkObjectReference kitchenObjectParentNetworkObjectReference)
     {
-        KitchenObjectSO kitchenObjectSO = GetKitchenObjectSoFromIndex(kitchenObjectSOIndex);
+        KitchenObjectSO kitchenObjectSo = GetKitchenObjectSoFromIndex(kitchenObjectSoIndex);
         
-        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
+        Transform kitchenObjectTransform = Instantiate(kitchenObjectSo.prefab);
 
         NetworkObject kitchenObjectNetworkObject = kitchenObjectTransform.GetComponent<NetworkObject>();
         kitchenObjectNetworkObject.Spawn(true);
@@ -35,9 +32,9 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
     }
     
-    public int GetKitchenObjectSOIndex(KitchenObjectSO kitchenObjectSO)
+    public int GetKitchenObjectSOIndex(KitchenObjectSO kitchenObjectSo)
     {
-        return kitchenObjectListSO.kitchenObjectSOList.IndexOf(kitchenObjectSO);
+        return kitchenObjectListSO.kitchenObjectSOList.IndexOf(kitchenObjectSo);
     }
     
     public KitchenObjectSO GetKitchenObjectSoFromIndex(int index)

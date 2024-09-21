@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class MusicManager : MonoBehaviour {
 
 
-    private const string PLAYER_PREFS_MUSIC_VOLUME = "MusicVolume";
+    private const string PlayerPrefsMusicVolume = "MusicVolume";
 
 
     public static MusicManager Instance { get; private set; }
@@ -23,7 +19,7 @@ public class MusicManager : MonoBehaviour {
 
         audioSource = GetComponent<AudioSource>();
 
-        volume = PlayerPrefs.GetFloat(PLAYER_PREFS_MUSIC_VOLUME, .3f);
+        volume = PlayerPrefs.GetFloat(PlayerPrefsMusicVolume, .3f);
         audioSource.volume = volume;
     }
 
@@ -34,7 +30,7 @@ public class MusicManager : MonoBehaviour {
         }
         audioSource.volume = volume;
 
-        PlayerPrefs.SetFloat(PLAYER_PREFS_MUSIC_VOLUME, volume);
+        PlayerPrefs.SetFloat(PlayerPrefsMusicVolume, volume);
         PlayerPrefs.Save();
     }
 

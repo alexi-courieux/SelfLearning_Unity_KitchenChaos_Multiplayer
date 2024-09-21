@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -33,10 +31,10 @@ public class BaseCounter : NetworkBehaviour, IKitchenObjectParent {
         return counterTopPoint;
     }
 
-    public void SetKitchenObject(KitchenObject kitchenObject) {
-        this.kitchenObject = kitchenObject;
+    public void SetKitchenObject(KitchenObject newKitchenObject) {
+        this.kitchenObject = newKitchenObject;
 
-        if (kitchenObject != null) {
+        if (newKitchenObject is not null) {
             OnAnyObjectPlacedHere?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -50,7 +48,7 @@ public class BaseCounter : NetworkBehaviour, IKitchenObjectParent {
     }
 
     public bool HasKitchenObject() {
-        return kitchenObject != null;
+        return kitchenObject is not null;
     }
 
     public NetworkObject GetNetworkObject()

@@ -41,7 +41,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
     {
         float fryingTimerMax = fryingRecipeSo?.fryingTimerMax ?? 1f;
         OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs {
-            progressNormalized = fryingTimer.Value / fryingTimerMax
+            ProgressNormalized = fryingTimer.Value / fryingTimerMax
         });
     }
     
@@ -49,7 +49,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
     {
         float burningTimerMax = burningRecipeSo?.burningTimerMax ?? 1f;
         OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs {
-            progressNormalized = burningTimer.Value / burningTimerMax
+            ProgressNormalized = burningTimer.Value / burningTimerMax
         });
     }
     
@@ -62,7 +62,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
         if(state.Value is State.Burned or State.Idle)
         {
             OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs {
-                progressNormalized = 0f
+                ProgressNormalized = 0f
             });
         }
     }
@@ -85,9 +85,9 @@ public class StoveCounter : BaseCounter, IHasProgress {
                         state.Value = State.Fried;
                         burningTimer.Value = 0f;
                         SetBurningRecipeSoClientRpc(
-                            KitchenGameMultiplayer.Instance.GetKitchenObjectSOIndex(GetKitchenObject().GetKitchenObjectSO())
+                            KitchenGameMultiplayer.Instance.GetKitchenObjectSOIndex(GetKitchenObject().GetKitchenObjectSo())
                         );
-                        burningRecipeSo = GetBurningRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+                        burningRecipeSo = GetBurningRecipeSoWithInput(GetKitchenObject().GetKitchenObjectSo());
                     }
                     break;
                 case State.Fried:
@@ -112,13 +112,13 @@ public class StoveCounter : BaseCounter, IHasProgress {
             // There is no KitchenObject here
             if (player.HasKitchenObject()) {
                 // Player is carrying something
-                if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) {
+                if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSo())) {
                     // Player carrying something that can be Fried
                     KitchenObject kitchenObject = player.GetKitchenObject();
                     kitchenObject.SetKitchenObjectParent(this);
 
                     InteractLogicPlaceObjectOnCounterServerRpc(
-                        KitchenGameMultiplayer.Instance.GetKitchenObjectSOIndex(kitchenObject.GetKitchenObjectSO())
+                        KitchenGameMultiplayer.Instance.GetKitchenObjectSOIndex(kitchenObject.GetKitchenObjectSo())
                     );
                 }
             } else {
@@ -130,7 +130,7 @@ public class StoveCounter : BaseCounter, IHasProgress {
                 // Player is carrying something
                 if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) {
                     // Player is holding a Plate
-                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) {
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSo())) {
                         KitchenObject.DestroyKitchenObject(GetKitchenObject());
                         SetStateIdleServerRpc();
                     }
@@ -161,44 +161,44 @@ public class StoveCounter : BaseCounter, IHasProgress {
     private void SetFryingRecipeSoClientRpc(int kitchenObjectSoIndex)
     {
         KitchenObjectSO kitchenObjectSo = KitchenGameMultiplayer.Instance.GetKitchenObjectSoFromIndex(kitchenObjectSoIndex);
-        fryingRecipeSo = GetFryingRecipeSOWithInput(kitchenObjectSo);
+        fryingRecipeSo = GetFryingRecipeSoWithInput(kitchenObjectSo);
     }
     
     [ClientRpc]
     private void SetBurningRecipeSoClientRpc(int kitchenObjectSoIndex)
     {
         KitchenObjectSO kitchenObjectSo = KitchenGameMultiplayer.Instance.GetKitchenObjectSoFromIndex(kitchenObjectSoIndex);
-        burningRecipeSo = GetBurningRecipeSOWithInput(kitchenObjectSo);
+        burningRecipeSo = GetBurningRecipeSoWithInput(kitchenObjectSo);
     }
 
     private bool HasRecipeWithInput(KitchenObjectSO inputKitchenObjectSo) {
-        FryingRecipeSO fryingRecipeSo = GetFryingRecipeSOWithInput(inputKitchenObjectSo);
-        return fryingRecipeSo != null;
+        FryingRecipeSO inputFryingRecipeSo = GetFryingRecipeSoWithInput(inputKitchenObjectSo);
+        return inputFryingRecipeSo != null;
     }
 
 
     private KitchenObjectSO GetOutputForInput(KitchenObjectSO inputKitchenObjectSo) {
-        FryingRecipeSO fryingRecipeSo = GetFryingRecipeSOWithInput(inputKitchenObjectSo);
-        if (fryingRecipeSo != null) {
+        FryingRecipeSO inputFryingRecipeSo = GetFryingRecipeSoWithInput(inputKitchenObjectSo);
+        if (inputFryingRecipeSo != null) {
             return this.fryingRecipeSo.output;
         } else {
             return null;
         }
     }
 
-    private FryingRecipeSO GetFryingRecipeSOWithInput(KitchenObjectSO inputKitchenObjectSo) {
-        foreach (FryingRecipeSO fryingRecipeSo in fryingRecipeSOArray) {
-            if (fryingRecipeSo.input == inputKitchenObjectSo) {
-                return fryingRecipeSo;
+    private FryingRecipeSO GetFryingRecipeSoWithInput(KitchenObjectSO inputKitchenObjectSo) {
+        foreach (FryingRecipeSO recipe in fryingRecipeSOArray) {
+            if (recipe.input == inputKitchenObjectSo) {
+                return recipe;
             }
         }
         return null;
     }
 
-    private BurningRecipeSO GetBurningRecipeSOWithInput(KitchenObjectSO inputKitchenObjectSO) {
-        foreach (BurningRecipeSO burningRecipeSO in burningRecipeSOArray) {
-            if (burningRecipeSO.input == inputKitchenObjectSO) {
-                return burningRecipeSO;
+    private BurningRecipeSO GetBurningRecipeSoWithInput(KitchenObjectSO inputKitchenObjectSo) {
+        foreach (BurningRecipeSO recipe in burningRecipeSOArray) {
+            if (recipe.input == inputKitchenObjectSo) {
+                return recipe;
             }
         }
         return null;

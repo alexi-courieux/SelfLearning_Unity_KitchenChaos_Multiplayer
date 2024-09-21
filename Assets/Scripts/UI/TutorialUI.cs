@@ -38,16 +38,16 @@ public class TutorialUI : MonoBehaviour {
     }
 
     private void UpdateVisual() {
-        keyMoveUpText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Up);
-        keyMoveDownText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Down);
-        keyMoveLeftText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Left);
-        keyMoveRightText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Move_Right);
+        keyMoveUpText.text = GameInput.Instance.GetBindingText(GameInput.Binding.MoveUp);
+        keyMoveDownText.text = GameInput.Instance.GetBindingText(GameInput.Binding.MoveDown);
+        keyMoveLeftText.text = GameInput.Instance.GetBindingText(GameInput.Binding.MoveLeft);
+        keyMoveRightText.text = GameInput.Instance.GetBindingText(GameInput.Binding.MoveRight);
         keyInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Interact);
         keyInteractAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.InteractAlternate);
         keyPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Pause);
-        keyGamepadInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_Interact);
-        keyGamepadInteractAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_InteractAlternate);
-        keyGamepadPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.Gamepad_Pause);
+        keyGamepadInteractText.text = GameInput.Instance.GetBindingText(GameInput.Binding.GamepadInteract);
+        keyGamepadInteractAlternateText.text = GameInput.Instance.GetBindingText(GameInput.Binding.GamepadInteractAlternate);
+        keyGamepadPauseText.text = GameInput.Instance.GetBindingText(GameInput.Binding.GamepadPause);
     }
 
     private void Show() {
