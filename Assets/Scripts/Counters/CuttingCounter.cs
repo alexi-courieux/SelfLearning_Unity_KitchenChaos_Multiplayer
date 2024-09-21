@@ -74,8 +74,8 @@ public class CuttingCounter : BaseCounter, IHasProgress {
     public override void InteractAlternate(Player player) {
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())) {
             // There is a KitchenObject here AND it can be cut
-            TestCuttingProgressDoneServerRpc();
             CutObjectServerRpc();
+            TestCuttingProgressDoneServerRpc();
         }
     }
 
@@ -98,8 +98,6 @@ public class CuttingCounter : BaseCounter, IHasProgress {
         OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs {
             progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
         });
-
-        TestCuttingProgressDoneServerRpc();
     }
     
     [ServerRpc(RequireOwnership = false)]
