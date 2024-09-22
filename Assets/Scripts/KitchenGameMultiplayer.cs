@@ -1,15 +1,23 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KitchenGameMultiplayer : NetworkBehaviour
 {
+    private const int MaxPlayersCount = 4;
     public static KitchenGameMultiplayer Instance { get; private set; }
+    
+    public event EventHandler OnTryingToJoinGame;
+    public event EventHandler OnFailedToJoinGame;
     
     [SerializeField] private KitchenObjectListSO kitchenObjectListSO;
 
     private void Awake()
     {
         Instance = this;
+        
+        DontDestroyOnLoad(gameObject);
     }
 
     public void StartHost()
@@ -18,21 +26,36 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         NetworkManager.Singleton.StartHost();
     }
     
-    private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
-    {
-        if (KitchenGameManager.Instance.IsGameWaitingToStart())
-        {
-            connectionApprovalResponse.Approved = true;
-            connectionApprovalResponse.CreatePlayerObject = true;
-        } else
-        {
-            connectionApprovalResponse.Approved = false;
-        }
-    }
-    
     public void StartClient()
     {
+        OnTryingToJoinGame?.Invoke(this, EventArgs.Empty);
+        
+        NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
         NetworkManager.Singleton.StartClient();
+    }
+    
+    private void NetworkManager_OnClientDisconnectCallback(ulong clientId)
+    {
+        OnFailedToJoinGame?.Invoke(this, EventArgs.Empty);
+    }
+    
+    private void NetworkManager_ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
+    {
+        if (SceneManager.GetActiveScene().name != Loader.Scene.CharacterSelectScene.ToString())
+        {
+            connectionApprovalResponse.Approved = false;
+            connectionApprovalResponse.Reason = "Game already in progress";
+            return;
+        }
+        
+        if (NetworkManager.Singleton.ConnectedClientsIds.Count >= MaxPlayersCount)
+        {
+            connectionApprovalResponse.Approved = false;
+            connectionApprovalResponse.Reason = "Lobby is full";
+            return;
+        }
+        
+        connectionApprovalResponse.Approved = true;
     }
     
     public void SpawnKitchenObject(KitchenObjectSO kitchenObjectSo, IKitchenObjectParent kitchenObjectParent) {
