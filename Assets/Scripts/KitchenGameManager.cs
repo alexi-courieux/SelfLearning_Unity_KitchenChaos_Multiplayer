@@ -53,6 +53,19 @@ public class KitchenGameManager : NetworkBehaviour {
     public override void OnNetworkSpawn() {
         state.OnValueChanged += State_OnValueChanged;
         isGamePaused.OnValueChanged += IsGamePaused_OnValueChanged;
+
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += NetworkManager_OnClientDisconnectCallback;
+        }
+    }
+    
+    private void NetworkManager_OnClientDisconnectCallback(ulong clientId)
+    {
+        playerReadyDictionary.Remove(clientId);
+        playerPauseDictionary.Remove(clientId);
+        
+        TestGamePausedState();
     }
     
     private void State_OnValueChanged(State previousState, State newState) {
