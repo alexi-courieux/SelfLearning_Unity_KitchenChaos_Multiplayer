@@ -1,14 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LobbyUI : MonoBehaviour
 {
+    
     [SerializeField] private Button MainMenuButton;
     [SerializeField] private Button CreateLobbyButton;
     [SerializeField] private Button QuickJoinButton;
+    [SerializeField] private LobbyCreateUI lobbyCreateUI;
+    [SerializeField] private Button JoinCodeButton;
+    [SerializeField] private TMP_InputField JoinCodeInputField;
 
     private void Awake()
     {
@@ -19,12 +24,17 @@ public class LobbyUI : MonoBehaviour
         
         CreateLobbyButton.onClick.AddListener(() =>
         {
-            KitchenGameLobby.Instance.CreateLobby("Test Lobby", false);
+            lobbyCreateUI.Show();
         });
         
         QuickJoinButton.onClick.AddListener(() =>
         {
             KitchenGameLobby.Instance.QuickJoin();
+        });
+
+        JoinCodeButton.onClick.AddListener(() =>
+        {
+            KitchenGameLobby.Instance.JoinByCode(JoinCodeInputField.text);
         });
     }
 }
