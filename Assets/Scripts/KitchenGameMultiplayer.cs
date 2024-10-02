@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class KitchenGameMultiplayer : NetworkBehaviour
 {
-    private const int MaxPlayersCount = 4;
+    public const int MaxPlayersCount = 4;
     public static KitchenGameMultiplayer Instance { get; private set; }
     
     public event EventHandler OnTryingToJoinGame;
