@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
@@ -11,6 +9,12 @@ using Random = UnityEngine.Random;
 public class KitchenGameLobby : MonoBehaviour
 {
     public static KitchenGameLobby Instance { get; private set; }
+    
+    public event EventHandler OnCreateLobbyStarted;
+    public event EventHandler OnCreateLobbyFailed;
+    public event EventHandler OnJoinStarted;
+    public event EventHandler OnQuickJoinFailed;
+    public event EventHandler OnJoinFailed;
 
     private const float HeartbeatInterval = 10f;
     
@@ -36,7 +40,6 @@ public class KitchenGameLobby : MonoBehaviour
             heartbeatTimer -= Time.deltaTime;
             if (heartbeatTimer <= 0)
             {
-                Debug.Log("Sending heartbeat ping");
                 heartbeatTimer = HeartbeatInterval;
                 try
                 {
@@ -68,6 +71,7 @@ public class KitchenGameLobby : MonoBehaviour
 
     public async void CreateLobby(String lobbyName, bool isPrivate)
     {
+        OnCreateLobbyStarted?.Invoke(this, EventArgs.Empty);
         CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
         {
             IsPrivate = isPrivate
@@ -80,12 +84,14 @@ public class KitchenGameLobby : MonoBehaviour
         }
         catch (LobbyServiceException lse)
         {
+            OnCreateLobbyFailed?.Invoke(this, EventArgs.Empty);
             Debug.LogError($"Failed to create lobby: {lse.Message}");
         }
     }
 
     public async void QuickJoin()
     {
+        OnJoinStarted?.Invoke(this, EventArgs.Empty);
         try
         {
            joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
@@ -93,7 +99,8 @@ public class KitchenGameLobby : MonoBehaviour
         }
         catch (LobbyServiceException lse)
         {
-            Debug.LogError($"Failed to join lobby: {lse.Message}");
+            OnQuickJoinFailed?.Invoke(this, EventArgs.Empty);
+            Debug.LogError($"Failed to quick join lobby: {lse.Message}");
         }
     }
 
@@ -104,6 +111,7 @@ public class KitchenGameLobby : MonoBehaviour
     
     public async void JoinByCode(string code)
     {
+        OnJoinStarted?.Invoke(this, EventArgs.Empty);
         try
         {
             joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
@@ -111,7 +119,46 @@ public class KitchenGameLobby : MonoBehaviour
         }
         catch (LobbyServiceException lse)
         {
+            OnJoinFailed?.Invoke(this, EventArgs.Empty);
             Debug.LogError($"Failed to join lobby: {lse.Message}");
+        }
+    }
+
+    public async void DeleteLobby()
+    {
+        if(joinedLobby == null) return;
+        try
+        {
+            await LobbyService.Instance.DeleteLobbyAsync(joinedLobby.Id);
+            joinedLobby = null;
+        } catch (LobbyServiceException lse)
+        {
+            Debug.LogError($"Failed to delete lobby: {lse.Message}");
+        }
+    }
+
+    public async void LeaveLobby()
+    {
+        if(joinedLobby == null) return;
+        try
+        {
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+            joinedLobby = null;
+        } catch (LobbyServiceException lse)
+        {
+            Debug.LogError($"Failed to leave lobby: {lse.Message}");
+        }
+    }
+    
+    public async void KickPlayerFromLobby(string playerId)
+    {
+        if(!IsLobbyHost()) return;
+        try
+        {
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
+        } catch (LobbyServiceException lse)
+        {
+            Debug.LogError($"Failed to kick player from lobby: {lse.Message}");
         }
     }
 }
